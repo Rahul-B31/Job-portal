@@ -1,7 +1,6 @@
 package com.jobportal.services;
 
 import java.io.IOException;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,11 +21,14 @@ import com.jobportal.exception.UserException;
 import com.jobportal.model.Application;
 import com.jobportal.model.Company;
 import com.jobportal.model.Job;
+import com.jobportal.model.SavedJob;
 import com.jobportal.model.User;
 import com.jobportal.repository.ApplicationRepository;
 import com.jobportal.repository.CompanyRepository;
 import com.jobportal.repository.JobRepository;
+import com.jobportal.repository.SavedJobRepository;
 import com.jobportal.repository.UserRepository;
+import com.jobportal.response.ApiResponse;
 
 
 @Service
@@ -44,6 +46,9 @@ public class JobServiceImpl implements IJobService {
 	
 	@Autowired
 	ApplicationRepository applicationRepository;
+	
+	@Autowired
+	SavedJobRepository savedJobRepository;
 	
 	@Value("${candidate.resume-dir}")
 	String uploadResumeDir;
@@ -179,5 +184,88 @@ public class JobServiceImpl implements IJobService {
 		return path;
 	    
 	}
+	
+	@Override
+	public ApiResponse saveJobByUserIdAndJobId(String jobId,String userId) throws Exception
+	{
+		
+		  Job job = jobRepository.findById(jobId).orElseThrow(()->new JobNotFound("Job not found for the id "+jobId));
+		  User user = userRepository.findById(userId).orElseThrow(()->new UserException("User Not Found for the ID "+userId));
+		  
+		  SavedJob savedJob = new SavedJob();
+		  savedJob.setJob(job);
+		  savedJob.setUser(user);	   
+		  SavedJob save = savedJobRepository.save(savedJob);
+		  if(save!=null) {
+			  return new ApiResponse("The job is saved successfully with the id "+save.getId(),true);
+		  }else {
+			  throw new Exception("Cannot able to saved the job");
+		  }
+		
+	}
+	
+	public List<SavedJob> getSavedJobByUserId(String userId)
+	{
+		  
+		  User user = userRepository.findById(userId).orElseThrow(()->new UserException("User Not Found for the id" +userId));
+	
+		  return savedJobRepository.findByUser(user);
+		
+	}
+	
+	public List<Job> getCreatedJobByRecruiterId(String recruiterId){
+		
+		  User recuiter = userRepository.findById(recruiterId).orElseThrow(()->new UserException("Recruiter Not Found For the Id "+recruiterId));
+		  return jobRepository.findByRecruiter(recuiter);
+	}
+	
+	public ApiResponse deleteSavedJobByUserIdAndJobId(String userId,String jobId) {
+		
+		 User user = userRepository.findById(userId).orElseThrow(()->new UserException("User Not Found For the Id "+userId));
+		 Job job = jobRepository.findById(jobId).orElseThrow(()-> new JobNotFound("Job Not Found For the ID "+jobId));
+		
+		savedJobRepository.deleteByUserAndJob(user,job);
+		return new ApiResponse("The Job Unsaved",true);
+	}
+	
+	public ApiResponse deleteJobById(String jobId) {	
+		Job job = jobRepository.findById(jobId).orElseThrow(()->new JobNotFound("Job Not Found for the id "+jobId));
+		jobRepository.delete(job);
+		return new ApiResponse("The Job is deleted successfully",true);
+	
+	}
+	
+	
+	@Override
+	public List<Application> getAppliedAppliactionByJobId(String jobId) {
+		Job job = jobRepository.findById(jobId).orElseThrow(()->new JobNotFound("Job Not Found"));
+		return applicationRepository.findByJob(job);
+	
+	}
+	
+	public ApiResponse updateStatusByApplicationId(String appId,String status) throws Exception {	
+		Application application = applicationRepository.findById(appId).orElseThrow(()->new Exception("Appliaction not found"));
+		application.setStatus(status);
+		Application save = applicationRepository.save(application);
+		if(save!=null)
+		   return new ApiResponse("The Job is deleted successfully",true);
+		else
+			throw new Exception("Cannot able to change the status");
+		
+	}
+	public ApiResponse updateStatusJob(String jobId,Boolean status) {	
+		Job job = jobRepository.findById(jobId).orElseThrow(()->new JobNotFound("Appliaction not found"));
+		job.setOpen(status);
+		Job save = jobRepository.save(job);
+		if(save!=null)
+			return new ApiResponse("The Job status is changes successfully",true);
+		else
+			throw new JobNotFound("cannot able to change the status of the job");
+	
+	}
+	
+	
+	
+	
 
 }

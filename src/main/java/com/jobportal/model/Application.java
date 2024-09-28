@@ -14,10 +14,10 @@ public class Application {
 	    private String appId;
 
 	    @DBRef
-	    private Job job;  // Reference to the job
+	    private Job job; 
 	    
 	    @DBRef
-	    private User user;  // Reference to the user
+	    private User user;  
 
 	    private String status;  // Enum can be represented as String
 	    private String resume;

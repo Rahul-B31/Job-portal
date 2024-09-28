@@ -12,5 +12,6 @@ public interface ApplicationRepository extends MongoRepository<Application,Strin
 	
 	 boolean existsByJobAndUser(Job job, User user);
 	 List<Application> findByUser(User user);
+	 List<Application> findByJob(Job job);
 
 }

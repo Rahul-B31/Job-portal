@@ -9,7 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.jobportal.dto.JobDetails;
 import com.jobportal.model.Application;
 import com.jobportal.model.Job;
-import com.jobportal.model.User;
+import com.jobportal.model.SavedJob;
+import com.jobportal.response.ApiResponse;
 
 
 
@@ -22,7 +23,24 @@ public interface IJobService {
 	public List<Application> getApplicationsByUser(String userId);
 	
 	public Boolean isApplied(String userId,String jobId); 
-	public Path getResumeById(String appId); 
+	
+	public Path getResumeById(String appId);
+	
+	public ApiResponse saveJobByUserIdAndJobId(String jobId,String userId) throws Exception;
+	
+	public List<SavedJob> getSavedJobByUserId(String userId);
+	
+	public List<Job> getCreatedJobByRecruiterId(String recruiterId);
+	
+	public ApiResponse deleteSavedJobByUserIdAndJobId(String userId,String jobId);
+	
+	public ApiResponse deleteJobById(String jobId);
+	
+	public List<Application> getAppliedAppliactionByJobId(String jobId);
+	
+	public ApiResponse updateStatusByApplicationId(String appId,String status) throws Exception;
+	
+	public ApiResponse updateStatusJob(String jobId,Boolean status);
 	
 	public Application applyToJob(
 			MultipartFile file,
