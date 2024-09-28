@@ -18,7 +18,6 @@ const LandingPage = () => {
   const {reqUser} = useSelector(state=>state.auth)
   const dispatch = useDispatch();
 
-  const navigate = useNavigate()
   const token = localStorage.getItem("token")
 
   

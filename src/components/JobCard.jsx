@@ -5,10 +5,15 @@ import { Link } from 'react-router-dom'
 import { Button } from './ui/button'
 import { BASE_URL } from '@/api/config'
 import axios from 'axios'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { BarLoader } from 'react-spinners'
+import { fetchSavedJobs } from '@/Redux/Job/actions'
 
-const JobCard = ({job,isMyJob=false,savedInit=false}) => {
+const JobCard = ({job,
+                   isMyJob=false,
+                   savedInit=false,
+                   onJobDelete = () => {},
+                   }) => {
 
     const {reqUser} = useSelector(state=>state.auth)
 
@@ -16,6 +21,8 @@ const JobCard = ({job,isMyJob=false,savedInit=false}) => {
     const token = localStorage.getItem("token")
     const [loading ,setLoading] = useState(false);
     const {savedjobs} = useSelector(state=>state.jobs) 
+
+    const dispatch = useDispatch()
 
     useState(() => {
         const isJobSaved = savedjobs.some(savedJob => savedJob?.job?.jobId === job?.jobId);
@@ -37,12 +44,13 @@ const JobCard = ({job,isMyJob=false,savedInit=false}) => {
 
     }
 
-    const handleSaveJob=()=>{
+    const handleSaveJob= async ()=>{
 
         if(saved)
         {
-            handleUnSavedJob();
             setSaved(false)
+            await handleUnSavedJob();
+            dispatch(fetchSavedJobs(reqUser?.user_id,token))
         }
         else{
             SaveJob();
@@ -66,7 +74,25 @@ const JobCard = ({job,isMyJob=false,savedInit=false}) => {
     }
 
 
-    const handleDeleteJob=()=>{
+    const handleDeleteJob= async ()=>{
+
+          try {
+            setLoading(true)
+            const res  = await axios.delete(`${BASE_URL}/api/delete-job/${job?.jobId}`,{
+                headers:{
+                   Authorization : `Bearer ${token}`
+                } 
+           });
+           await onJobDelete();
+           setLoading(false)
+           console.log("the res for delete job ",res.data)
+           
+          }catch (error) {
+            console.log(error)
+          }
+            
+            
+
 
     }
 
@@ -84,7 +110,7 @@ const JobCard = ({job,isMyJob=false,savedInit=false}) => {
                     className="text-red-300 cursor-pointer"
                     fill="red"
                     size={18}
-                onClick={handleDeleteJob}
+                    onClick={handleDeleteJob}
                 />
             )}
              

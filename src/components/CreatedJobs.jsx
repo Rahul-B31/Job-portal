@@ -13,26 +13,31 @@ const CreatedJobs = ({user}) => {
 
   const token = localStorage.getItem("token")
 
-  useEffect(()=>{
-    const fetchCreatedJobs = async ()=>{
-        try {
 
-          const res = await axios.get(`${BASE_URL}/api/created-jobs/${user?.user_id}`,{
-            headers:{
-              Authorization : `Bearer ${token}`
-            }
-          })
-        setCreatedJobs(res.data);
-        console.log("The res for my created job is ",res.data)  
-
-        } catch (error) {
-           console.log(error)
-        }finally{
-          setLoading(false)
+  const fetchCreatedJobs = async ()=>{
+    try {
+      setLoading(true)
+      const res = await axios.get(`${BASE_URL}/api/created-jobs/${user?.user_id}`,{
+        headers:{
+          Authorization : `Bearer ${token}`
         }
+      })
+    setCreatedJobs(res.data);
+    setLoading(false)
+    console.log("The res for my created job is ",res.data)  
 
+    } catch (error) {
+       console.log(error)
+    }finally{
+      setLoading(false)
     }
-    fetchCreatedJobs();  
+
+}
+
+  useEffect(()=>{
+
+    if(user?.user_id)
+       fetchCreatedJobs();  
 
   },[user?.user_id])
 
@@ -48,9 +53,10 @@ const CreatedJobs = ({user}) => {
             createdJobs.map((job) => {
               return (
                 <JobCard
-                  key={job.id}
+                  key={job?.id}
                   job={job}
                   isMyJob
+                  onJobDelete={fetchCreatedJobs}
                 />
               );
             })

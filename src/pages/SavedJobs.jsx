@@ -1,32 +1,24 @@
 import JobCard from '@/components/JobCard';
-import React from 'react'
-import { useSelector } from 'react-redux';
+import { fetchSavedJobs } from '@/Redux/Job/actions';
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { BarLoader } from 'react-spinners';
 
 const SavedJobs = () => {
 
-
-
   const {loading,savedjobs} = useSelector(state=>state.jobs)
+  const {reqUser} = useSelector(state=>state.auth)
 
-  // const { isLoaded } = useUser();
+  const dispatch = useDispatch()
+  const token = localStorage.getItem("token")
 
-  // const {
-  //   loading: loadingSavedJobs,
-  //   data: savedJobs,
-  //   fn: fnSavedJobs,
-  // } = useFetch(getSavedJobs);
+  // if (loading) {
+  //   return ;
+  // }
 
-  // useEffect(() => {
-  //   if (isLoaded) {
-  //     fnSavedJobs();
-  //   }
-
-  // }, [isLoaded]);
-
-  if (loading) {
-    return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />;
-  }
+  useEffect(()=>{
+       dispatch(fetchSavedJobs(reqUser?.user_id,token))
+  },[savedjobs.length])
 
   return (
     <div>
@@ -34,7 +26,7 @@ const SavedJobs = () => {
       Saved Jobs
     </h1>
 
-    {loading === false && (
+    {loading?<BarLoader className="mb-4" width={"100%"} color="#36d7b7" />:(
       <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {savedjobs?.length ? (
           savedjobs?.map((saved) => {

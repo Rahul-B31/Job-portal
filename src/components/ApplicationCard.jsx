@@ -50,8 +50,21 @@ const ApplicationCard = ({applications,isCandidate}) => {
           
     }
 
-    const handleStatusChange = ()=>{
-
+    // testing is pending 
+    const handleStatusChange = async (status)=>{
+          
+        try {
+        const res = await axios.patch(`${BASE_URL}/api/appliaction-status/${applications?.appId}`,{
+            status:status
+        },{
+           headers:{
+            Authorization : `Bearer ${token}`
+           }
+        })
+        console.log("the res for the appliaction status ",res.data);            
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     

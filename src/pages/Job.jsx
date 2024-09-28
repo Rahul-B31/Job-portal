@@ -9,6 +9,7 @@ import { Briefcase, DoorClosed, DoorOpen, MapPinIcon } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom'
+import { BarLoader } from 'react-spinners';
 
 const Job = () => {
    
@@ -19,19 +20,41 @@ const Job = () => {
   const dispatch = useDispatch()
   const token = localStorage.getItem("token")
 
+  const [isOpen,setIOpen] = useState(null)
+
   const {post} = useSelector(state=>state.jobs)
   const {reqUser} = useSelector(state=>state.auth)
 
+  const [applications,setApplications] = useState([]);
+  const [loading,setLoading] = useState(false);
+
 
   const [isApplied,setIsApplied] = useState(null);
-  console.log("the post data ",post)
-  const handleStatusChange = ()=>{
 
 
+
+  /// testing is pending 
+  const handleStatusChange = async (isOpen)=>{
+
+       try {
+
+        const res = await axios.patch(`${BASE_URL}/api/job-status/${post?.jobId}`,{
+          status:isOpen
+        },{
+            headers:{
+              Authorization : `Bearer ${token}`
+            }
+        })
+        setIOpen(res.data)   
+        console.log("the job status is ",res.data)
+        
+       } catch (error) {
+           console.log(error)
+       }
   }
 
 useEffect(()=>{
-     const checkIsAppiled = async ()=>{
+     const checkIsApplied = async ()=>{
           try {
 
             const res = await axios.get(`${BASE_URL}/api/isapply`,{
@@ -46,21 +69,54 @@ useEffect(()=>{
 
              setIsApplied(res.data);         
           } catch (error) {
-            
+              console.log(error)
           }
 
      }
-     checkIsAppiled();
-})
+     
+     if (post?.jobId) {
+      checkIsApplied();
+    }
+},[post?.jobId, reqUser?.user_id])
    
 
   //fetch details of the job using the id 
   useEffect(()=>{
       dispatch(fetchJobById(id,token))
-  },[])
+  },[isOpen])
 
 
-  return (
+  useEffect(()=>{
+    
+    const fetchAppiedAppliactions = async ()=>{
+
+         try {
+          setLoading(true)
+          const res = await axios.get(`${BASE_URL}/api/applied-appliactions/${post?.jobId}`,{
+            headers:{
+              Authorization : `Bearer ${token}`
+            }
+          })
+          setLoading(false)
+          console.log("the appliaction are ",res.data)
+          setApplications(res.data)   
+         } catch (error) {
+             console.log(error)
+         }finally{
+          setLoading(false)
+         }
+
+
+    }
+
+    if(reqUser?.user_id===post?.recruiter?.user_id && post?.jobId){
+         fetchAppiedAppliactions();
+    } 
+
+  },[post?.jobId, reqUser?.user_id, post?.recruiter?.user_id])
+
+
+  return loading?<BarLoader className="mt-6" width={"100%"} color="#36d7b7" />:(
     <div className='flex flex-col gap-8 mt-5'>
         
         <div className="flex flex-col-reverse gap-6 md:flex-row justify-between items-center">
@@ -95,15 +151,15 @@ useEffect(()=>{
 
         {/* Hiring  status */}
         {post?.recruiter?.user_id==reqUser?.user_id &&
-        <Select onValueChange={(value) => handleStatusChange}>
+        <Select onValueChange={(value) => handleStatusChange(value)}>
           <SelectTrigger className={`w-full ${post?.open ? "bg-green-950" : "bg-red-950"}`}>
             <SelectValue placeholder={
               "Hiring Status " + (post?.open ? "( Open )" : "( Closed )")
             } />
           </SelectTrigger>
           <SelectContent>
-              <SelectItem value={"Open"}>Open</SelectItem>    
-              <SelectItem value={"Closed"}>Closed</SelectItem>    
+              <SelectItem value={true}>Open</SelectItem>    
+              <SelectItem value={false}>Closed</SelectItem>    
           </SelectContent>
         </Select> 
    }
@@ -133,13 +189,20 @@ useEffect(()=>{
 
      {/* job.applications?.length>0 && job?.recruiter_id===user?.id && */}
 
+
+
+
+    {applications.length>0 && 
      <div className="flex flex-col gap-3">
          <h2 className='text-2xl sm:text-3xl font-bold '>Application</h2>
          {/* Render all the application here using the map */}
-         <ApplicationCard/>
-         <ApplicationCard/>
-         <ApplicationCard/>
+
+        {applications.map((appliaction)=>(
+         <ApplicationCard key={appliaction?.appId} applications={appliaction} isCandidate={false}/>
+        ))}
+         
      </div>
+    }
 
       
     </div>
