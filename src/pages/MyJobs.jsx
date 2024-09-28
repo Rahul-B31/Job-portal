@@ -19,7 +19,7 @@ const MyJobs = () => {
       {reqUser?.accountType == "CANDIDATE"?(
         <CreatedApplications user={reqUser} />
       ) : (
-        <CreatedJobs />
+        <CreatedJobs user={reqUser} />
       )} 
     </div>
   );

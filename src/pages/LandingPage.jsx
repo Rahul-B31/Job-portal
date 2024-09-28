@@ -8,16 +8,24 @@ import Autoplay from "embla-carousel-autoplay";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import faqs from "../data/faq.json"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { fetchSavedJobs } from "@/Redux/Job/actions";
 
 const LandingPage = () => {
 
 
-  const auth = useSelector(state=>state.auth)
+  const {reqUser} = useSelector(state=>state.auth)
+  const dispatch = useDispatch();
 
   const navigate = useNavigate()
+  const token = localStorage.getItem("token")
 
-
+  
+ useEffect(()=>{
+      if(reqUser)
+        dispatch(fetchSavedJobs(reqUser?.user_id,token))
+ },[reqUser]) 
 
 
   return (

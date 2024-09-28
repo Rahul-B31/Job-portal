@@ -60,7 +60,6 @@ useEffect(()=>{
   },[])
 
 
-  console.log("image url ",`${BASE_URL}/${post?.company?.logoUrl}`)
   return (
     <div className='flex flex-col gap-8 mt-5'>
         

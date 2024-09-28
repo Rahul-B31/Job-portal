@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/api/config";
-import { applyJobFailuer, applyJobRequest, applyJobSuccess, createJobFailuer, createJobRequest, createJobSuccess, fetchAllJobFailuer, fetchAllJobRequest, fetchAllJobSuccess, fetchJobByIdRequest } from "./actionType"
+import { applyJobFailuer, applyJobRequest, applyJobSuccess, createJobFailuer, createJobRequest, createJobSuccess, fecthSavedJobFailuer, fecthSavedJobRequest, fecthSavedJobSuccess, fetchAllJobFailuer, fetchAllJobRequest, fetchAllJobSuccess, fetchJobByIdRequest } from "./actionType"
+import axios from "axios";
 
 
 export const createJob = (data,token)=>{
@@ -118,4 +119,23 @@ export const applyJob = (data,token) => {
           }
 
         }
+}
+
+export const fetchSavedJobs = (useId,token)=>async(dispatch)=>{
+
+  try { 
+       dispatch(fecthSavedJobRequest()) 
+       const res = await axios.get(`${BASE_URL}/api/saved-job/${useId}`,{
+       headers:{
+            Authorization : `Bearer ${token}`
+       }
+    })
+   dispatch(fecthSavedJobSuccess(res.data))
+   console.log("save jobs...",res.data)
+ } catch (error) {
+     dispatch(fecthSavedJobFailuer(error))
+ }
+
+
+
 }

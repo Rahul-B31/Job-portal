@@ -1,9 +1,13 @@
 import JobCard from '@/components/JobCard';
 import React from 'react'
+import { useSelector } from 'react-redux';
+import { BarLoader } from 'react-spinners';
 
 const SavedJobs = () => {
 
 
+
+  const {loading,savedjobs} = useSelector(state=>state.jobs)
 
   // const { isLoaded } = useUser();
 
@@ -13,9 +17,6 @@ const SavedJobs = () => {
   //   fn: fnSavedJobs,
   // } = useFetch(getSavedJobs);
 
-
-
-  let  loadingSavedJobs = false 
   // useEffect(() => {
   //   if (isLoaded) {
   //     fnSavedJobs();
@@ -23,9 +24,9 @@ const SavedJobs = () => {
 
   // }, [isLoaded]);
 
-  // if (!isLoaded || loadingSavedJobs) {
-  //   return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />;
-  // }
+  if (loading) {
+    return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />;
+  }
 
   return (
     <div>
@@ -33,33 +34,19 @@ const SavedJobs = () => {
       Saved Jobs
     </h1>
 
-    {loadingSavedJobs === false && (
+    {loading === false && (
       <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* {savedJobs?.length ? (
-          savedJobs?.map((saved) => {
+        {savedjobs?.length ? (
+          savedjobs?.map((saved) => {
             return (
               <JobCard
-                // key={saved.id}
-                // job={saved?.job}
-                // onJobAction={fnSavedJobs}
-                // savedInit={true}
+                key={saved.id}
+                job={saved?.job}
+                savedInit={true}
               />
             );
           })
-        ) */}
-       
-          { 1==1?([1,2,3,4,5,6,7,8,9,10].map((saved) => {
-            return (
-              <JobCard
-                // key={saved.id}
-                // job={saved?.job}
-                // onJobAction={fnSavedJobs}
-                // savedInit={true}
-              />
-            );
-          })
-        )
-        
+        )      
         : (
           <div>No Saved Jobs 👀</div>
         )}

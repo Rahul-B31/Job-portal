@@ -1,5 +1,8 @@
 import { BASE_URL } from "@/api/config"
 import { currentUserFailuer, currentUserRequest, currentUserSuccess, loginUserFailuer, loginUserRequest, loginUserSuccess, registerUserFailuer, registerUserRequest, registerUserSuccess } from "./actionTypes"
+import { useId } from "react"
+import { fecthSavedJobFailuer, fecthSavedJobRequest, fecthSavedJobSuccess } from "../Job/actionType"
+import axios from "axios"
 
 
 export const register = (data) => {
@@ -93,3 +96,4 @@ export const logoutUser = ()=> async(dispatch)=>{
   dispatch(currentUserSuccess(null));
   
 }
+

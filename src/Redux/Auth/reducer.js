@@ -1,3 +1,4 @@
+
 import { CURRENT_USER_FAILURE, CURRENT_USER_REQUEST, CURRENT_USER_SUCCESS, LOGIN_USER_FAILURE, LOGIN_USER_REQUEST, LOGIN_USER_SUCCESS, REGISTER_USER_FAILURE, REGISTER_USER_REQUEST, REGISTER_USER_SUCCESS } from "./actionTypes"
 
 const initialState = {
@@ -6,6 +7,7 @@ const initialState = {
     login:null,
     reqUser:null,
     error: null,
+    
 
 }
 

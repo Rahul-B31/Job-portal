@@ -1,3 +1,4 @@
+import { Expand } from "lucide-react"
 
 
 export const CREATE_JOB_REQUEST = "CREATE_JOB_REQUEST"
@@ -13,6 +14,13 @@ export const FETCH_ALL_JOB_POSTS_FAILUER = "FETCH_ALL_JOB_POSTS_FAILUER"
 export const APPLY_JOB_REQUEST = "APPLY_JOB_REQUEST"
 export const APPLY_JOB_SUCCESS =  "APPLY_JOB_SUCCESS"
 export const APPLY_JOB_FAILUER=   "APPLY_JOB_FAILUER"
+
+
+export const FETCH_SAVED_JOBS_REQUEST = "FETCH_SAVED_JOBS_REQUEST"
+export const FETCH_SAVED_JOBS_SUCCESS = "FETCH_SAVED_JOBS_SUCCESS"
+export const FETCH_SAVED_JOBS_FAILUER = "FETCH_SAVED_JOBS_FAILUER"
+
+
 
 
 
@@ -85,4 +93,25 @@ export const applyJobFailuer =(error)=>{
         type:APPLY_JOB_FAILUER,
         payload:error
       }
+}
+
+
+export const fecthSavedJobRequest = ()=>{
+    return {
+        type:FETCH_SAVED_JOBS_REQUEST
+    }
+}
+
+export const fecthSavedJobSuccess = (data)=>{
+    return {
+        type:FETCH_SAVED_JOBS_SUCCESS,
+        payload:data
+    }
+}
+
+export const fecthSavedJobFailuer = (error)=>{
+    return {
+        type:FETCH_SAVED_JOBS_FAILUER,
+        payload:error
+    }
 }

@@ -1,47 +1,46 @@
 
 import { BarLoader } from "react-spinners";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import JobCard from "./JobCard";
+import axios from "axios";
+import { BASE_URL } from "@/api/config";
 
-const CreatedJobs = () => {
-
-
-  // const {
-  //   loading: loadingCreatedJobs,
-  //   data: createdJobs,
-  //   fn: fnCreatedJobs,
-  // } = useFetch(getMyJobs, {
-  //   recruiter_id: user.id,
-  // });
-
-  // useEffect(() => {
-  //   fnCreatedJobs();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+const CreatedJobs = ({user}) => {
 
 
-  const createdJobs = [
+  const [createdJobs,setCreatedJobs] = useState(null);
+  const [loading,setLoading] = useState(true)
 
-    {
-      id:1,
-    },
-    {
-      id:2,
-    },
-    {
-      id:3,
-    },
-    {
-      id:4,
-    },
-  ]
+  const token = localStorage.getItem("token")
 
-  const isMyJob=true
+  useEffect(()=>{
+    const fetchCreatedJobs = async ()=>{
+        try {
 
-  const loadingCreatedJobs = false
+          const res = await axios.get(`${BASE_URL}/api/created-jobs/${user?.user_id}`,{
+            headers:{
+              Authorization : `Bearer ${token}`
+            }
+          })
+        setCreatedJobs(res.data);
+        console.log("The res for my created job is ",res.data)  
+
+        } catch (error) {
+           console.log(error)
+        }finally{
+          setLoading(false)
+        }
+
+    }
+    fetchCreatedJobs();  
+
+  },[user?.user_id])
+
+
+
   return (
     <div>
-      {loadingCreatedJobs ? (
+      {loading ? (
         <BarLoader className="mt-4" width={"100%"} color="#36d7b7" />
       ) : (
         <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -51,7 +50,7 @@ const CreatedJobs = () => {
                 <JobCard
                   key={job.id}
                   job={job}
-                  isMyJob={isMyJob}
+                  isMyJob
                 />
               );
             })
