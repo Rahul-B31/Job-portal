@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -57,6 +58,14 @@ public class GlobalException {
 	{
 		
 		ErrorDetails err = new ErrorDetails("Job not found",e.getMessage(),LocalDateTime.now());
+		return new ResponseEntity<ErrorDetails>(err,HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<ErrorDetails> invalidTokenRecevied(BadCredentialsException e)
+	{
+		
+		ErrorDetails err = new ErrorDetails("Invalid Token recevied",e.getMessage(),LocalDateTime.now());
 		return new ResponseEntity<ErrorDetails>(err,HttpStatus.BAD_REQUEST);
 	}
 	

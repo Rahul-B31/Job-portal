@@ -55,9 +55,15 @@ public class JobController {
 	
 	
 	@GetMapping("/jobs")
-	public ResponseEntity<?> getAllJobs() throws Exception{
+	public ResponseEntity<?> getAllJobs(@RequestParam(required = false) String location,
+			                          @RequestParam(required = false) String comapany_id) throws Exception{
+		    List<Job> jobs = null;
+		    if(location!=null || comapany_id!=null) {
+		    	  jobs = jobService.filteredJobs(location, comapany_id);
+		    }else {    	
+		    	jobs = jobService.fetchAllJobs();
+		    }
 		
-		List<Job> jobs = jobService.fetchAllJobs();
 		return new ResponseEntity<List<Job>>(jobs,HttpStatus.OK);	
 	}
 	
@@ -177,7 +183,6 @@ public class JobController {
 	@GetMapping("/applied-appliactions/{jobId}")
 	public ResponseEntity<List<Application>> getAppliedAppliaction (@PathVariable String jobId) {
 		
-		   System.err.println(jobId);
 		   List<Application> applications = jobService.getAppliedAppliactionByJobId(jobId);
 		  
 		  return new ResponseEntity<List<Application>>(applications,HttpStatus.OK);

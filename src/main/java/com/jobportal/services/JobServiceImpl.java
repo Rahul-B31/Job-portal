@@ -89,6 +89,24 @@ public class JobServiceImpl implements IJobService {
 	     List<Job> jobs = jobRepository.findAll();
 		return jobs;
 	}
+	
+	@Override
+	public List<Job> filteredJobs(String location,String company_Id) {
+          Company company = null;
+          List<Job> jobs = null;
+          
+		  if(company_Id !=null)
+			 company = companyRepository.findById(company_Id).get();
+		
+		
+		if(location!=null && company!=null)
+		 jobs = jobRepository.findByLocationAndCompany(location, company);
+		else if(location!=null)
+			jobs = jobRepository.findByLocation(location);
+		else if(company!=null)
+			jobs = jobRepository.findByCompany(company);
+		return jobs;
+	}
 
 
 
@@ -248,7 +266,7 @@ public class JobServiceImpl implements IJobService {
 		application.setStatus(status);
 		Application save = applicationRepository.save(application);
 		if(save!=null)
-		   return new ApiResponse("The Job is deleted successfully",true);
+		   return new ApiResponse("The Job status is updated successfully",true);
 		else
 			throw new Exception("Cannot able to change the status");
 		

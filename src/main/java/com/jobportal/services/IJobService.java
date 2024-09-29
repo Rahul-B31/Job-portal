@@ -42,6 +42,8 @@ public interface IJobService {
 	
 	public ApiResponse updateStatusJob(String jobId,Boolean status);
 	
+	public List<Job> filteredJobs(String location,String company_Id);
+	
 	public Application applyToJob(
 			MultipartFile file,
 			String candidate_id,
