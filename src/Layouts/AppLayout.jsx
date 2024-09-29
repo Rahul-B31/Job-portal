@@ -13,7 +13,8 @@ const AppLayout = () => {
 
         <main className='min-h-screen container px-10'>
 
-          {location.pathname!="/login" && <Header/>}
+          {/* {location.pathname!="/login" && <Header/>} */}
+          <Header/>
           <Outlet/>
         </main>
 

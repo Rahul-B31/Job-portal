@@ -1,7 +1,5 @@
-import { useState } from 'react'
 
 import './App.css'
-import { Button } from './components/ui/button'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import AppLayout from './Layouts/AppLayout'
 import LandingPage from './pages/LandingPage'
@@ -14,6 +12,8 @@ import MyJobs from './pages/MyJobs'
 import { ThemeProvider } from './components/theme-provider'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import ProtectedRoute from './components/ProtectedRoute'
+
 
 
 
@@ -31,23 +31,23 @@ const router = createBrowserRouter([{
      },
      {
          path:"/jobs",
-         element:<JobListing/>
+         element:<ProtectedRoute><JobListing/></ProtectedRoute>
      },
      {
          path:"/job/:id",
-         element:<Job/>
+         element:<ProtectedRoute><Job/></ProtectedRoute>
      },
      {
          path:"/post-jobs",
-         element:<PostJob/>
+         element:<ProtectedRoute><PostJob /></ProtectedRoute>
      },
      {
          path:"/saved-jobs",
-         element:<SavedJobs/>
+         element:<ProtectedRoute><SavedJobs></SavedJobs></ProtectedRoute>
      },
      {
          path:"/my-jobs",
-         element:<MyJobs/>
+         element:<ProtectedRoute><MyJobs/></ProtectedRoute>
      },
      {
          path:"/login",
@@ -64,11 +64,11 @@ function App() {
  
 
   return (
-    <>
+   
     <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme' >
         <RouterProvider router={router}/>
     </ThemeProvider>
-    </>
+ 
 
   )
 }

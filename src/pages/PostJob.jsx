@@ -11,7 +11,8 @@ import { State } from 'country-state-city';
 import React, { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { BarLoader } from 'react-spinners';
 import { z } from 'zod';
 
 
@@ -37,8 +38,8 @@ const PostJob = () => {
   });
 
 
-  const {companydata} = useSelector(state=>state.company)
-  const auth = useSelector(state=>state.auth)
+  const {companydata,loading} = useSelector(state=>state.company)
+  const {reqUser} = useSelector(state=>state.auth)
 
   const dispatch = useDispatch()
   const token = localStorage.getItem("token")
@@ -52,7 +53,7 @@ const PostJob = () => {
 
   const onSubmit = (data) => {
 
-     const sendData  = {...data,recruiter_id:auth?.reqUser?.user_id}
+     const sendData  = {...data,recruiter_id:reqUser?.user_id}
      dispatch(createJob(sendData,token))
      navigate("/jobs")
     
@@ -67,18 +68,12 @@ const PostJob = () => {
   // }, [loadingCreateJob]);
 
 
-  // useEffect(() => {
-  //   if (isLoaded) {
-  //     fnCompanies();
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isLoaded]);
 
 
-  // if (user?.unsafeMetadata?.role !== "recruiter") {
-  //   return <Navigate to="/jobs" />;
-  // }
 
+  if (reqUser?.accountType !== "RECRUITER") {
+    return <Navigate to="/jobs" />;
+  }
 
   useEffect(()=>{
     dispatch(getAllCompany(token))
@@ -179,7 +174,7 @@ const PostJob = () => {
 
 
 
-        {/* {loadingCreateJob && <BarLoader width={"100%"} color="#36d7b7" />} */}
+        {loading && <BarLoader width={"100%"} color="#36d7b7" />}
         <Button type="submit" variant="blue" size="lg" className="mt-2">
           Submit
         </Button>

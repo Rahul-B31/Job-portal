@@ -34,20 +34,34 @@ export const createJob = (data,token)=>{
 }
 
 
-export const fetchAllJob = (token)=>{
+export const fetchAllJob = (token,location,comapany_id)=>{
     return async (dispatch)=>{
      try {
-
-          
+         if(location=="") location=null 
+         if(comapany_id=="") comapany_id=null 
         dispatch(fetchAllJobRequest());
 
-        const res = await fetch(`${BASE_URL}/api/jobs`,{
-            method:"GET",
+        // const res = await fetch(`${BASE_URL}/api/jobs`,{
+        //     method:"GET",
+        //     headers:{
+        //         Authorization : `Bearer ${token}`
+        //     }
+        // })
+        // const resdata = await res.json();
+        // console.log("The res for fetch all job",resdata);
+        // dispatch(fetchAllJobSuccess(resdata))
+
+
+        const res = await axios.get(`${BASE_URL}/api/jobs`,{
+            params:{
+              location,
+              comapany_id
+            },
             headers:{
-                Authorization : `Bearer ${token}`
+               Authorization : `Bearer ${token}`
             }
         })
-        const resdata = await res.json();
+        const resdata = res.data;
         console.log("The res for fetch all job",resdata);
         dispatch(fetchAllJobSuccess(resdata))
 

@@ -29,15 +29,16 @@ const Header = () => {
            </Link>
 
            <div className="flex justify-between gap-4">
-           <Link to="/post-jobs">
-
            {/*  This button is only shown to the recruiter not the candidate handle this condition */}
+             {auth?.reqUser?.accountType==="RECRUITER"  && 
+               <Link to="/post-jobs"> 
+                    <Button variant="destructive" className="rounded-full  h-10 md:h-15">
+                         <PenBox size={15} className='mr-2'/>
+                         Post a Job
+                    </Button>
+                </Link>
+              }         
              
-               <Button variant="destructive" className="rounded-full  h-10 md:h-15">
-                    <PenBox size={15} className='mr-2'/>
-                    Post a Job
-               </Button>
-           </Link>
 
             {auth?.reqUser?.name && 
                <Profile/>

@@ -18,7 +18,19 @@ const LandingPage = () => {
   const {reqUser} = useSelector(state=>state.auth)
   const dispatch = useDispatch();
 
+  const navigate = useNavigate()
+
   const token = localStorage.getItem("token")
+
+
+  const handlePostJobClick = ()=>{
+        if(reqUser.accountType==="RECRUITER"){
+              navigate("/post-jobs")
+        }else{
+          window.prompt("Your are not recruiter ")
+        }
+       
+  }
 
   
  useEffect(()=>{
@@ -50,9 +62,9 @@ const LandingPage = () => {
               </Link>
 
 
-              <Link to="/post-jobs">
-                  <Button size="xl" variant="destructive" >Post Jobs</Button>
-              </Link>
+              
+                  <Button onClick={handlePostJobClick} size="xl"  variant="destructive">Post Jobs</Button>
+             
             </div>
 
               {/* Carousel */}

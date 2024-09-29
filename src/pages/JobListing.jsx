@@ -16,6 +16,10 @@ const JobListing = () => {
   const [location, setLocation] = useState("");
   const [company_id, setCompany_id] = useState("");
 
+  console.log("Location ",location)
+  console.log("compnay-id",company_id)
+  
+
 
   const dispatch = useDispatch()
 
@@ -44,10 +48,13 @@ const JobListing = () => {
 
 
   useEffect(()=>{  
-       dispatch(fetchAllJob(token))
-       dispatch(getAllCompany(token))
-  },[posts?.length])
+       dispatch(fetchAllJob(token,location,company_id)) 
+  },[posts?.length,location,company_id])
 
+  useEffect(()=>{
+    if(token)
+       dispatch(getAllCompany(token))
+  },[])
 
   const handleSearch = (e)=>{
       e.preventDefault();
@@ -58,21 +65,14 @@ const JobListing = () => {
   }
 
   const clearFilters = ()=>{
-
     setCompany_id("");
     setLocation("");
     setSearchQuery("")
   }
 
-  // const { isLoaded } = useUser();
 
 
-  // const {
-  //   // loading: loadingCompanies,
-  //   data: companies,
-  //   fn: fnCompanies,
-  // } = useFetch(getCompanies);
-
+ 
 
   // const {
   //   loading: loadingJobs,
@@ -170,7 +170,7 @@ const JobListing = () => {
 
 
       </div>
-      {/* Here we can add the loader for the job <barloader/> */}
+     
 
     
         {loading &&

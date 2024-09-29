@@ -9,6 +9,7 @@ import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { BarLoader } from 'react-spinners'
 import { z } from 'zod'
 
 
@@ -33,7 +34,7 @@ const Login = () => {
 
 
 
-  const auth = useSelector(state=>state?.auth)
+  const {reqUser,loading} = useSelector(state=>state?.auth)
 
 
   const form = useForm({
@@ -45,12 +46,12 @@ const Login = () => {
   });
 
   useEffect(()=>{
-     dispatch(currentUser(token))
-       if(auth?.reqUser?.name)
-          naviagte("/")
 
-       console.log(auth)
-  },[auth?.reqUser?.name,token])
+       if(token)
+          dispatch(currentUser(token))
+       if(reqUser?.name)
+          naviagte("/")
+  },[reqUser?.name,token])
 
   // useEffect(()=>{
   //   if(token){
@@ -61,12 +62,11 @@ const Login = () => {
   // },[token])
 
   const onSubmit = (data) => {
-      dispatch(login(data))
-      
+      dispatch(login(data))     
   };
 
 
-  return (
+  return loading?<BarLoader width={"100%"} color="#36d7b7" />:(
     <div className='flex justify-center mt-28'>  
         <Card className="xl:w-1/3 md:w-1/4 shadow-lg shadow-slate-700 opacity-90">
         <CardHeader>

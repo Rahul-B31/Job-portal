@@ -53,7 +53,8 @@ const Register = () => {
 
 
   useEffect(()=>{
-    dispatch(currentUser(token))
+    if(token)
+      dispatch(currentUser(token))
       if(auth?.reqUser?.name)
          navigate("/")
 
