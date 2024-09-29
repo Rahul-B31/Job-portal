@@ -37,7 +37,7 @@ const Job = () => {
   const handleStatusChange = async (isOpen)=>{
 
        try {
-
+         setLoading(true)
         const res = await axios.patch(`${BASE_URL}/api/job-status/${post?.jobId}`,{
           status:isOpen
         },{
@@ -46,6 +46,7 @@ const Job = () => {
             }
         })
         setIOpen(res.data)   
+        setLoading(false)
         console.log("the job status is ",res.data)
         
        } catch (error) {

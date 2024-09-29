@@ -2,11 +2,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useRef } from 'react'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from './ui/drawer';
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from './ui/drawer';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { BarLoader } from 'react-spinners';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAllCompany, registerCompany } from '@/Redux/Company/actions';
 import { useNavigate } from 'react-router-dom';
 
@@ -41,16 +41,11 @@ const AddCompanyDrawer = () => {
   const dispatch = useDispatch()
   const token = localStorage.getItem("token")
 
+  const {loading,error} = useSelector(state=>state.company)
+
   const navigate = useNavigate()
 
-  const closeDrawer = useRef(null)
-
-  // const {
-  //   loading: loadingAddCompany,
-  //   error: errorAddCompany,
-  //   data: dataAddCompany,
-  //   fn: fnAddCompany,
-  // } = useFetch(addNewCompany);
+  const closeDrawer = useRef(null);
 
 
   const onSubmit = async (data) => {
@@ -61,16 +56,7 @@ const AddCompanyDrawer = () => {
       closeDrawer.current.click()
     }
     
-
   };
-
-
-  // useEffect(() => {
-  //   if (dataAddCompany?.length > 0) {
-  //     fetchCompanies();
-  //   }
-  // }, [loadingAddCompany]);
-
 
   return (
     <Drawer>
@@ -80,12 +66,16 @@ const AddCompanyDrawer = () => {
         </Button>
       </DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>Add a New Company</DrawerTitle>
-        </DrawerHeader>
+          <DrawerHeader>
+              <DrawerTitle>Add a New Company</DrawerTitle>
+              <DrawerDescription> Use this form to add a new company by providing its name and logo.</DrawerDescription>
+          </DrawerHeader>
+
+         
         <form className="flex gap-2 p-4 pb-0">
+
           {/* Company Name */}
-          <Input name="name" placeholder="Company name" {...register("name")} autocomplete="off"  />
+          <Input name="name" placeholder="Company name" {...register("name")} autoComplete="off"  />
 
           {/* Company Logo */}
           <Input
@@ -110,12 +100,12 @@ const AddCompanyDrawer = () => {
           {errors.name && <p className="text-red-500">{errors.name.message}</p>}
           {errors.logo && <p className="text-red-500">{errors.logo.message}</p>}
 
-          {/* {errorAddCompany?.message && (
-            <p className="text-red-500">{errorAddCompany?.message}</p>
-          )} */}
+          {error?.message && (
+            <p className="text-red-500">{error?.message}</p>
+          )}
 
 
-          {/* {loadingAddCompany && <BarLoader width={"100%"} color="#36d7b7" />} */}
+          {loading && <BarLoader width={"100%"} color="#36d7b7" />}
           <DrawerClose   asChild>
             <Button type="button" variant="secondary" ref={closeDrawer}>
               Cancel

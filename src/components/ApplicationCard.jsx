@@ -12,11 +12,7 @@ const ApplicationCard = ({applications,isCandidate}) => {
 
     const [loading,setLoading]  = useState(false);
 
-    if(loading)
-    return <BarLoader className="mt-6" width={"100%"} color="#36d7b7" />
-    
-
-   
+  
     const handleDownload = async ()=>{
 
         
@@ -54,6 +50,7 @@ const ApplicationCard = ({applications,isCandidate}) => {
     const handleStatusChange = async (status)=>{
           
         try {
+          setLoading(true)
         const res = await axios.patch(`${BASE_URL}/api/appliaction-status/${applications?.appId}`,{
             status:status
         },{
@@ -61,16 +58,19 @@ const ApplicationCard = ({applications,isCandidate}) => {
             Authorization : `Bearer ${token}`
            }
         })
+        setLoading(false)
         console.log("the res for the appliaction status ",res.data);            
         } catch (error) {
             console.log(error)
+        }finally{
+          setLoading(false)
         }
     }
 
     
     return (
         <Card>
-          {/* {loadingHiringStatus && <BarLoader width={"100%"} color="#36d7b7" />} */}
+          {loading && <BarLoader width={"100%"} color="#36d7b7" />}
           <CardHeader>
             <CardTitle className="flex justify-between font-bold">
               {isCandidate

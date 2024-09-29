@@ -139,7 +139,7 @@ const PostJob = () => {
                 </SelectTrigger>
                 <SelectContent className="max-h-[200px] overflow-y-auto">
                   <SelectGroup>
-                    {companydata?.map(({ name, compId }) => (
+                    {companydata?.length>0 && companydata?.map(({ name, compId }) => (
                       <SelectItem key={compId} value={compId}>
                         {name}
                       </SelectItem>
