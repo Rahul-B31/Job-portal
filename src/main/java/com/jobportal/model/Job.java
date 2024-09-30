@@ -4,6 +4,7 @@ package com.jobportal.model;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,11 +16,15 @@ public class Job {
 	    
 	    private LocalDateTime createdAt;
 	    
+	    
 	    private String title;
+	    
 	    
 	    private String jobDescription;
 	    
+	    
 	    private String location;
+	    
 	    
 	    private String requirements;
 	    

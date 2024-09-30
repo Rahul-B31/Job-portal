@@ -44,6 +44,8 @@ public interface IJobService {
 	
 	public List<Job> filteredJobs(String location,String company_Id);
 	
+	 public List<Job> searchJobs(String keyword); 
+	
 	public Application applyToJob(
 			MultipartFile file,
 			String candidate_id,

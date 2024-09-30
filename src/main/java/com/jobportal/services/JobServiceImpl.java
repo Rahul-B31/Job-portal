@@ -27,6 +27,7 @@ import com.jobportal.repository.ApplicationRepository;
 import com.jobportal.repository.CompanyRepository;
 import com.jobportal.repository.JobRepository;
 import com.jobportal.repository.SavedJobRepository;
+import com.jobportal.repository.SearchRepository;
 import com.jobportal.repository.UserRepository;
 import com.jobportal.response.ApiResponse;
 
@@ -49,6 +50,9 @@ public class JobServiceImpl implements IJobService {
 	
 	@Autowired
 	SavedJobRepository savedJobRepository;
+	
+	@Autowired
+	SearchRepository searchRepository;
 	
 	@Value("${candidate.resume-dir}")
 	String uploadResumeDir;
@@ -281,6 +285,12 @@ public class JobServiceImpl implements IJobService {
 			throw new JobNotFound("cannot able to change the status of the job");
 	
 	}
+	
+	  @Override   
+	  public List<Job> searchJobs(String keyword){
+		  
+	        return searchRepository.searchJobsByKeywords(keyword);
+	  }
 	
 	
 	

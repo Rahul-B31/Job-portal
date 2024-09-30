@@ -56,9 +56,15 @@ public class JobController {
 	
 	@GetMapping("/jobs")
 	public ResponseEntity<?> getAllJobs(@RequestParam(required = false) String location,
-			                          @RequestParam(required = false) String comapany_id) throws Exception{
+			                          @RequestParam(required = false) String comapany_id,
+			                          @RequestParam(required =  false) String searchQuery) throws Exception{
 		    List<Job> jobs = null;
-		    if(location!=null || comapany_id!=null) {
+		    
+		    System.err.println(searchQuery);
+		    if(searchQuery!=null)
+		    {
+		    	jobs = jobService.searchJobs(searchQuery);
+		    }else if(location!=null || comapany_id!=null) {
 		    	  jobs = jobService.filteredJobs(location, comapany_id);
 		    }else {    	
 		    	jobs = jobService.fetchAllJobs();
@@ -205,7 +211,18 @@ public class JobController {
 		ApiResponse response = jobService.updateStatusJob(jobId,status);
 		
 		return new ResponseEntity<ApiResponse>(response,HttpStatus.OK);
-	}      
+	}   
+	
+	
+	
+	@GetMapping("/search")
+	public ResponseEntity<?> searchJobs(@RequestParam("keyword") String keyword) {
+		
+		List<Job> jobs = jobService.searchJobs(keyword);
+		System.err.println(keyword);
+		return new ResponseEntity<>(jobs,HttpStatus.OK);
+	}
+	
 	
 	
 	
