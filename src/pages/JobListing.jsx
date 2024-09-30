@@ -16,6 +16,8 @@ const JobListing = () => {
   const [location, setLocation] = useState("");
   const [company_id, setCompany_id] = useState("");
 
+  const [searchData,setSearchData] = useState([]);
+
   console.log("Location ",location)
   console.log("compnay-id",company_id)
   
@@ -47,22 +49,24 @@ const JobListing = () => {
 
 
 
-  useEffect(()=>{  
-       dispatch(fetchAllJob(token,location,company_id)) 
-  },[posts?.length,location,company_id])
+  useEffect(()=>{ 
+  
+     const timer =  setTimeout(() => {
+        dispatch(fetchAllJob(token,location,company_id,searchQuery)) 
+      },300);
+
+      return ()=>{
+        clearTimeout(timer)
+      }
+  },[posts?.length,location,company_id,searchQuery])
 
   useEffect(()=>{
     if(token)
        dispatch(getAllCompany(token))
   },[])
 
-  const handleSearch = (e)=>{
-      e.preventDefault();
-      let formData = new FormData(e.target);
-      const query = formData.get("search-query");
 
-      if(query) setSearchQuery(query);
-  }
+
 
   const clearFilters = ()=>{
     setCompany_id("");
@@ -111,17 +115,20 @@ const JobListing = () => {
 
       {/* filter */}
 
-      <form onSubmit={handleSearch} className='h-14 flex w-full gap-2 items-center mb-3'>
+      <form  className='h-14 flex w-full gap-2 items-center mb-3'>
          <Input
              type="text"
              placeholder="Search Jobs By Title... "
              name="search-query"
              className="h-full flex-1 px-4 text-md"
+             onChange={(e)=>setSearchQuery(e.target.value)}
+             value={searchQuery}
+             
          />
 
-         <Button type="submit" className="h-full sm:w-28" variant="blue">
+         {/* <Button type="submit" className="h-full sm:w-28" variant="blue">
           Search
-         </Button>
+         </Button> */}
       </form>
 
       <div className='flex flex-col sm:flex-row gap-2'>

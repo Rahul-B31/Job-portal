@@ -28,6 +28,7 @@ export const jobReducer = (state=initialState,actions)=>{
 
          case FETCH_JOB_BY_ID:  
             return {...state,loading:false,error:null,post:actions.payload}   
+   
 
         case CREATE_JOB_FAILUER:
         case FETCH_ALL_JOB_POSTS_FAILUER: 
